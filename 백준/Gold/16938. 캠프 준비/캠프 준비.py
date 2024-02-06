@@ -8,14 +8,10 @@ def score(n=0, m=0, sm=0, sco=[]):
     global lst, visit
     global count
     if n>=N:
-        if len(sco) >= 2 and sco[-1] - sco[0] >= X and L <= sum(sco) <= R:
-            # print(sco, "추가되었습니다1")
+        if len(sco) >= 2 and sco[-1] - sco[0] >= X and L <= sm <= R:
             count += 1
         return
-    # elif len(sco)>=2 and sco[-1]-sco[0]>=X and L<=sum(sco)<=R:
-    #     print(sco, "추가되었습니다2")
-    #     count+=1
-    #     return
+
     else:
         for i in range(m, N):
             if not visit[i]:
