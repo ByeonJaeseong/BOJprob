@@ -3,7 +3,7 @@ lst = [int(input()) for _ in range(M)]
 lst.sort(reverse=True)
 count =0
 for i in range(M):
-    while lst[i]<=N:
-        N-=lst[i]
-        count+=1
+    if lst[i]<=N:
+        count+=N//lst[i]
+        N= N%lst[i]
 print(count)
