@@ -2,6 +2,8 @@
 움직인 곳 전부 마킹하고
 가로 최대 세로 최대 해서 곱하면 됨
 '''
+import sys
+input = sys.stdin.readline
 TC = int(input())
 for tc in range(TC):
     D = 0
