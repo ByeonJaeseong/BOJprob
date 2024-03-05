@@ -3,23 +3,24 @@
 1 2 3
 '''
 
-def score(n=0, m=0, sm=0, sco=[]):
+def score(n=0, sm=0, ln=0, mx=0, mn=0):
     global N,L,R,X
     global lst, visit
     global count
     if n>=N:
-        if len(sco) >= 2 and sco[-1] - sco[0] >= X and L <= sm <= R:
+        if ln >= 2 and mx-mn >= X and L <= sm <= R:
+            # print(ln, mx, mn)
             count += 1
         return
-
+    elif sm>R:
+        return
     else:
-        for i in range(m, N):
-            if not visit[i]:
-                visit[i]=True
-                if sm+lst[i]<=R:
-                    score(n+1, i+1, sm+lst[i], sco+[lst[i]])
-                score(n + 1, i + 1, sm, sco)
-                visit[i]=False
+            if ln == 0:
+                score(n+1, lst[n], 1, lst[n], lst[n])
+            else:
+                score(n + 1,  sm+lst[n], ln+1, lst[n], mn)
+            score(n + 1,  sm, ln, mx, mn)
+
 
 
 
