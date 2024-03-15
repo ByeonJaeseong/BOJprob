@@ -8,9 +8,6 @@
 토탈케이스 1024
 800*1024*(10->계산여유) 1-> 1000만언더 고
 '''
-import copy
-
-
 def move(n, lst=[]):
     global move_lst
     if n ==5:
@@ -128,6 +125,9 @@ mx = 0
 
 for ord in move_lst:
     temp_matrix = [x[:] for x in matrix]
+    temp_mx = max([max(x) for x in temp_matrix])
+    if temp_mx*(2**5)<=mx:
+        continue
     play(ord)
     mx = max(mx,max([max(x) for x in temp_matrix]))
 print(mx)
