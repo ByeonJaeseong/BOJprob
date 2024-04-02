@@ -1,65 +1,69 @@
 '''
-worst 케이스 조합 252
-탐색시간 50*50*252 =630_000
-시간 자체는 충분함 -> 구상 완료 5분
+시작 9시 37분
 '''
 from collections import deque
 
-def check(x,y):
-    return 0<=x<N and 0<=y<N
+def check(x,y) : return  0<=x<N and 0<=y<N
 
-def combi(n, lst=[]):
-    global mn
-    if len(lst) ==M:
-        dq =deque()
-        dq.extend(lst)
-        mx = 0
-        visit = [[False]*N for _ in range(N)]
-        length = [[0]*N for _ in range(N)]
-        for i in range(M):
-            x, y = lst[i]
-            visit[x][y] = True
-        # 바이러스 마킹
-        while dq:
-            x, y = dq.popleft()
-            for i in range(4):
-                X = x+dx[i]
-                Y = y+dy[i]
-                if check(X,Y) and not visit[X][Y] and matrix[X][Y] in [0, 2]:
-                    visit[X][Y] = True
-                    length[X][Y] = length[x][y]+1
-                    dq.append((X,Y))
-        for i in range(N):
-            for j in range(N):
-                if matrix[i][j] == 0 and not visit[i][j]:
-                    # 빈칸과 바이러스가 있는데 방문을 안한경우
-                    mx = -1
-                    return
-                if matrix[i][j] == 0 and visit[i][j]:
-                    mx = max(mx, length[i][j])
-        if mx !=-1:
-            mn = min(mn,mx)
+def combination(n, lst):
+    global combi
+    if len(lst)==M:
+        combi.append(lst)
         return
-    # 활성 바이러스 갯수 정해지면
-    if n == len(virus):
-        return
-    # 바이러스 갯수 다 썼으면
-    combi(n+1, lst+[(virus[n])])
-    # 바이러스를 활성시키는 경우
-    combi(n + 1, lst)
-    # 바이러스를 활성시키지 않는 경우
+
+    if n>= len(virus): return
+
+    combination(n+1, lst+[virus[n]])
+    # 바이러스 넣고 보내기
+    combination(n+1, lst)
+    # 바이러스 안 넣고 보내기
+
+def spread(lst):
+    visit = [[False]*N for _ in range(N)]
+    length = [[0] * N for _ in range(N)]
+    dq = deque()
+    for x, y in lst:
+        dq.append((x,y))
+        visit[x][y] = True
+    while dq:
+        x, y = dq.popleft()
+        for i in range(4):
+            X, Y = x+dx[i], y+dy[i]
+            if check(X,Y) and not visit[X][Y] and matrix[X][Y] !=1:
+                dq.append((X,Y))
+                length[X][Y] = length[x][y] +1
+                visit[X][Y] = True
+    # print(*visit, sep='\n')
+    # print()
+    # print(*length, sep='\n')
+    # print()
+    mx = 0
+    for i in range(N):
+        for j in range(N):
+            if not visit[i][j] and matrix[i][j] == 0:
+                # 방문 못한 자리가 있으면 무한대
+                return INF
+            if visit[i][j] and matrix[i][j] == 0:
+                # 바이러스일 때는 제외
+                mx = max(mx, length[i][j])
+    return mx
 N, M = map(int, input().split())
+# 바이러스 M개 골라서 활성화 시키기, 바이러스는 2
 matrix = [list(map(int, input().split())) for _ in range(N)]
 virus = []
-INF = 1_000_000_000
-mn = INF
-dx = [-1, 0, 1, 0]
-dy = [0, 1, 0, -1]
+dx = (-1, 0, 1, 0)
+dy = (0, 1, 0, -1)
+INF = 2_100_000_000
 for i in range(N):
     for j in range(N):
         if matrix[i][j] == 2:
             virus.append((i,j))
-combi(0, [])
+combi = []
+combination(0,[])
+mn = INF
+for l in combi:
+    # print(spread(l))
+    mn = min(mn, spread(l))
 if mn == INF:
     print(-1)
 else:
