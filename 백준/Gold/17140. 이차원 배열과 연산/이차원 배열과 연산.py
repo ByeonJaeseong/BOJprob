@@ -1,74 +1,58 @@
 '''
-구상 시키는대로 잘하자 문제가 참 어렵다
-max 100*100행열
-시간 0.5초
-구상 5분 정도?
 '''
-def Rsort():
-    global matrix
-    # print(*matrix,sep="\n")
-    # print("실행")
-    mx = 0
-    temp_matrix = []
-    # 맨 위에서 부터 작업을 하고 역순으로 넣자
-    for i in range(len(matrix)):
-        temp = dict()
-        # print(temp)
-        for j in range(len(matrix[i])):
+
+def operation():
+    new = []
+    for i in range(lenR):
+        numb = dict()
+        for j in range(lenC):
             if matrix[i][j]==0:continue
-            if matrix[i][j] in temp:
-                temp[matrix[i][j]] = temp[matrix[i][j]] + 1
+            if matrix[i][j] in numb:
+                numb[matrix[i][j]]+=1
             else:
-                temp[matrix[i][j]] = 1
-        # 개수 저장하기 완료
-        temp_lst = [(v, k) for k, v in temp.items()]
-        mx = max(mx, len(temp_lst)*2)
-        temp_lst.sort()
-        append_lst = []
-        for i in temp_lst:
-            append_lst.append(i[1])
-            append_lst.append(i[0])
-        # print(append_lst)
-        temp_matrix.append(append_lst)
-    matrix.clear()
-    # print(*temp_matrix,sep="\n")
-    # print("템프 실행")
-    for t in temp_matrix:
-        if len(t) < min(mx, 100):
-            for _ in range(len(t), min(mx, 100)):
-                t.append(0)
-        matrix.append(t[:100])
-def Csort():
-    global matrix
-    # print(*matrix,sep='\n')
-    # print("돌리기전")
-    matrix = list(map(list, zip(*matrix)))
-    # print(*matrix,sep='\n')
-    # print("Csort")
-    Rsort()
-    matrix = list(map(list, zip(*matrix)))
+                numb[matrix[i][j]] = 1
+        lst = []
+        for k, v in numb.items():
+            # v갯수랑 k숫자
+            lst.append((v,k))
+        lst.sort()
+        app = []
+        for v, k in lst:
+            app.append(k)
+            app.append(v)
+        new.append(app)
+    mx = min(100, max([len(n) for n in new ]))
+    for i in range(len(new)):
+        if len(new[i]) < mx:
+            for _ in range(mx-len(new[i])):
+                new[i].append(0)
+            else:
+                new[i] = new[i][:mx]
+    return new
 
-r, c, K = map(int, input().split())
-r, c = r-1, c-1
-## 타겟 되는 지점 설정
+
+R, C, K = map(int, input().split())
+R, C = R-1, C-1
+#matrix[R][C] == K 인 케이스까지 걸리는 시간
 matrix = [list(map(int, input().split())) for _ in range(3)]
-# print(*matrix, sep='\n')
-# print(r, c)
-count = 0
-while True:
-
-    if len(matrix)>r and len(matrix[0])>c and matrix[r][c] == K:
+time = 0
+for _ in range(102):
+    if 0<=R<len(matrix) and 0<=C<len(matrix[0]) and matrix[R][C] == K:
         break
-    count+=1
-    if count>100:break
-    if len(matrix)>=len(matrix[0]):
-        Rsort()
+    time +=1
+    lenR = len(matrix)
+    lenC = len(matrix[0])
+    if lenR>=lenC:
+        matrix = operation()
+        # print(*matrix,sep='\n')
+        # print()
     else:
-        Csort()
-    # print(*matrix,sep='\n')
-    # print()
+        matrix = list(map(list, zip(*matrix)))
+        lenR, lenC = lenC, lenR
+        matrix = operation()
+        matrix = list(map(list, zip(*matrix)))
 
-if count>100:
+if time>100:
     print(-1)
 else:
-    print(count)
+    print(time)
